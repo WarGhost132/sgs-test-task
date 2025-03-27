@@ -25,3 +25,6 @@ export * from '@/entities/department'
 
 // Employess
 export * from '@/entities/employee'
+
+// Teams
+export * from '@/entities/team'

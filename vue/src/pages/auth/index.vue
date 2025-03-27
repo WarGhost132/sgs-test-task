@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useCityStore, useDepartmentStore, useEmployeeStore } from '@stores'
+import { useCityStore, useDepartmentStore, useEmployeeStore, useTeamStore } from '@stores'
 
 const cityStore = useCityStore()
 const departmentStore = useDepartmentStore()
 const employeeStore = useEmployeeStore()
+const teamStore = useTeamStore()
 
 const selectedCityId = ref('')
 const selectedDeptId = ref('')
+const selectedEmpId = ref('')
+const selectedTeamId = ref('')
 
 onMounted(async () => {
   await Promise.all([
     cityStore.loadCities(),
     departmentStore.loadDepartments(),
-    employeeStore.loadEmployees()
+    employeeStore.loadEmployees(),
+    teamStore.loadTeams()
   ])
   if (cities.value.length) selectedCityId.value = cities.value[0].id
 })
@@ -22,6 +26,7 @@ onMounted(async () => {
 const { cities, isLoading: cityLoading, error: cityError } = storeToRefs(cityStore)
 const { isLoading: deptLoading, error: deptError, getByCityId: getDeptsByCity } = storeToRefs(departmentStore)
 const { isLoading: empLoading, error: empError, getByDepartmentId: getEmpsByDept } = storeToRefs(employeeStore)
+const { teams, isLoading: teamsLoading, error: teamsError } = storeToRefs(teamStore)
 
 const filteredDepartments = computed(() => 
   selectedCityId.value ? getDeptsByCity.value(selectedCityId.value) : []
@@ -39,8 +44,8 @@ watch(filteredDepartments, (depts) => {
   }
 })
 
-const error = computed(() => cityError.value || deptError.value || empLoading.value)
-const isLoading = computed(() => cityLoading.value || deptLoading.value || empError.value)
+const error = computed(() => cityError.value || deptError.value || empLoading.value || teamsLoading.value)
+const isLoading = computed(() => cityLoading.value || deptLoading.value || empError.value || teamsError.value)
 </script>
 
 <template>
@@ -79,7 +84,8 @@ const isLoading = computed(() => cityLoading.value || deptLoading.value || empEr
       </div>
 
       <label>Сотрудник:</label>
-      <select 
+      <select
+        v-model="selectedEmpId"
         :disabled="!selectedDeptId || !filteredEmployees.length"
       >
         <option
@@ -94,6 +100,18 @@ const isLoading = computed(() => cityLoading.value || deptLoading.value || empEr
       <div v-if="selectedDeptId && !filteredEmployees.length" class="hint">
         Нет доступных сотрудников в выбранном цехе
       </div>
+
+      <label>Бригада:</label>
+      <select v-model="selectedTeamId">
+        <option
+          v-for="team in teams"
+          :key="team.id"
+          :value="team.id"
+        >
+          {{ team.name }}
+          <span v-if="team.description">({{ team.description }})</span>
+        </option>
+      </select>
     </div>
   </div>
 </template>

@@ -1,0 +1,1 @@
+export { mockTeams } from './mockData'
