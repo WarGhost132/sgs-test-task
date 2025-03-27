@@ -22,3 +22,6 @@ export * from '@/entities/city'
 
 // Departments
 export * from '@/entities/department'
+
+// Employess
+export * from '@/entities/employee'

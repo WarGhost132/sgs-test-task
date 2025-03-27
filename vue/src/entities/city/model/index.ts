@@ -1,1 +1,1 @@
-export * from './store'
+export { useCityStore } from './store'
