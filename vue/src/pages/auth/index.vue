@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
-import { useCityStore } from '@/app/providers/store'
-
-import styles from './styles.module.scss'
+import {storeToRefs} from 'pinia'
+import {onMounted} from 'vue'
+import {useCityStore} from '@stores'
 
 const cityStore = useCityStore()
 const { cities, isLoading, error } = storeToRefs(cityStore)
