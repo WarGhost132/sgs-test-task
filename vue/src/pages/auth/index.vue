@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useCityStore, useDepartmentStore, useEmployeeStore, useTeamStore } from '@stores'
+import { useCityStore, useDepartmentStore, useEmployeeStore, useShiftStore, useTeamStore } from '@stores'
 
 const cityStore = useCityStore()
 const departmentStore = useDepartmentStore()
 const employeeStore = useEmployeeStore()
 const teamStore = useTeamStore()
+const shiftStore = useShiftStore()
 
 const selectedCityId = ref('')
 const selectedDeptId = ref('')
 const selectedEmpId = ref('')
 const selectedTeamId = ref('')
+const selectedShiftId = ref('')
 
 onMounted(async () => {
   await Promise.all([
     cityStore.loadCities(),
     departmentStore.loadDepartments(),
     employeeStore.loadEmployees(),
-    teamStore.loadTeams()
+    teamStore.loadTeams(),
+    shiftStore.loadShifts()
   ])
   if (cities.value.length) selectedCityId.value = cities.value[0].id
 })
@@ -27,6 +30,7 @@ const { cities, isLoading: cityLoading, error: cityError } = storeToRefs(citySto
 const { isLoading: deptLoading, error: deptError, getByCityId: getDeptsByCity } = storeToRefs(departmentStore)
 const { isLoading: empLoading, error: empError, getByDepartmentId: getEmpsByDept } = storeToRefs(employeeStore)
 const { teams, isLoading: teamsLoading, error: teamsError } = storeToRefs(teamStore)
+const { shifts, isLoading: shiftsLoading, error: shiftsError } = storeToRefs(shiftStore)
 
 const filteredDepartments = computed(() => 
   selectedCityId.value ? getDeptsByCity.value(selectedCityId.value) : []
@@ -44,8 +48,8 @@ watch(filteredDepartments, (depts) => {
   }
 })
 
-const error = computed(() => cityError.value || deptError.value || empLoading.value || teamsLoading.value)
-const isLoading = computed(() => cityLoading.value || deptLoading.value || empError.value || teamsError.value)
+const error = computed(() => cityError.value || deptError.value || empLoading.value || teamsLoading.value || shiftsLoading.value)
+const isLoading = computed(() => cityLoading.value || deptLoading.value || empError.value || teamsError.value || shiftsError.value)
 </script>
 
 <template>
@@ -86,8 +90,19 @@ const isLoading = computed(() => cityLoading.value || deptLoading.value || empEr
       <label>Сотрудник:</label>
       <select
         v-model="selectedEmpId"
+        title="Выберите сотрудника"
         :disabled="!selectedDeptId || !filteredEmployees.length"
+        class="select-with-placeholder"
       >
+        <option 
+          value="" 
+          disabled 
+          selected 
+          hidden
+          class="placeholder-option"
+        >
+          Выберите сотрудника
+        </option>
         <option
           v-for="employee in filteredEmployees"
           :key="employee.id"
@@ -102,7 +117,16 @@ const isLoading = computed(() => cityLoading.value || deptLoading.value || empEr
       </div>
 
       <label>Бригада:</label>
-      <select v-model="selectedTeamId">
+      <select v-model="selectedTeamId" class="select-with-placeholder">
+        <option 
+          value="" 
+          disabled 
+          selected 
+          hidden
+          class="placeholder-option"
+        >
+          Выберите бригаду
+        </option>
         <option
           v-for="team in teams"
           :key="team.id"
@@ -110,6 +134,26 @@ const isLoading = computed(() => cityLoading.value || deptLoading.value || empEr
         >
           {{ team.name }}
           <span v-if="team.description">({{ team.description }})</span>
+        </option>
+      </select>
+
+      <label>Смена</label>
+      <select v-model="selectedShiftId" class="select-with-placeholder">
+        <option 
+          value="" 
+          disabled 
+          selected 
+          hidden
+          class="placeholder-option"
+        >
+          Выберите смену
+        </option>
+        <option
+          v-for="shift in shifts"
+          :key="shift.id"
+          :value="shift.id"
+        >
+          {{ shift.name }} ({{ shift.startTime }} - {{ shift.endTime }})
         </option>
       </select>
     </div>
@@ -141,5 +185,18 @@ select {
 select:disabled {
   opacity: 0.7;
   background-color: #f5f5f5;
+}
+.select-with-placeholder {
+  /* Стили для select */
+  color: var(--text-color);
+}
+
+.select-with-placeholder:invalid {
+  color: #999;
+}
+
+.placeholder-option {
+  color: #999;
+  display: none;
 }
 </style>

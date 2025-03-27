@@ -28,3 +28,6 @@ export * from '@/entities/employee'
 
 // Teams
 export * from '@/entities/team'
+
+// Shifts
+export * from '@/entities/shift'
