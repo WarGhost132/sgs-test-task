@@ -1,25 +1,31 @@
 <script setup lang="ts">
-import { useCounterStore } from '@/features/counter'
 import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
+import { useCityStore } from '@/app/providers/store'
 
 import styles from './styles.module.scss'
 
-const counter = useCounterStore()
+const cityStore = useCityStore()
+const { cities, isLoading, error } = storeToRefs(cityStore)
 
-const { count, doubleCount, isEven } = storeToRefs(counter)
-
-const handleIncrement = () => counter.increment(2)
+onMounted(() => {
+  cityStore.loadCities()
+})
 </script>
 
 <template>
   <div>
-    <p>Count: {{ count }}</p>
-    <p>Double: {{ doubleCount }}</p>
-    <p>Is even: {{ isEven ? 'Yes' : 'No' }}</p>
+    <div v-if="isLoading">Загрузка городов</div>
+    <div v-else-if="error">{{ error }}</div>
 
-    <button @click="counter.increment()">+1</button>
-    <button @click="handleIncrement">+2</button>
-    <button @click="counter.decrement()">-1</button>
-    <button @click="counter.reset()">Reset</button>
+    <select v-else>
+      <option
+        v-for="city in cities"
+        :key="city.id"
+        :value="city.id"
+      >
+        {{ city.name }}
+      </option>
+    </select>
   </div>
 </template>
