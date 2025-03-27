@@ -17,6 +17,8 @@ export const setupStore = () => {
   return pinia
 }
 
+// Cities
 export * from '@/entities/city'
 
-export * from '@/features/counter'
+// Departments
+export * from '@/entities/department'
