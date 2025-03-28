@@ -11,6 +11,7 @@ import {
 } from '@stores'
 import { useRouter } from 'vue-router'
 import { UiSelect } from '@/shared/ui/Select'
+import { UiButton } from '@/shared/ui/Button'
 
 const router = useRouter()
 
@@ -154,13 +155,12 @@ const submitForm = async () => {
         placeholder="Выберите смену"
       />
 
-      <button
+      <UiButton
         @click="submitForm"
         :disabled="isLoading"
-        class="submit-button"
       >
         Сохранить график
-      </button>
+      </UiButton>
     </template>
   </div>
 </template>
