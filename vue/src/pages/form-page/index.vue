@@ -6,15 +6,20 @@ import {
   useDepartmentStore,
   useEmployeeStore,
   useShiftStore,
-  useTeamStore
+  useTeamStore,
+  useWorkScheduleStore
 } from '@stores'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const stores = {
   city: useCityStore(),
   department: useDepartmentStore(),
   employee: useEmployeeStore(),
   team: useTeamStore(),
-  shift: useShiftStore()
+  shift: useShiftStore(),
+  schedule: useWorkScheduleStore()
 }
 
 const selections = ref({
@@ -87,6 +92,22 @@ watch(
   },
   { immediate: true }
 )
+
+const submitForm = async () => {
+  try {
+    const newSchedule = await stores.schedule.createSchedule({
+      cityId: selections.value.cityId,
+      departmentId: selections.value.departmentId,
+      employeeId: selections.value.employeeId,
+      teamId: selections.value.teamId,
+      shiftId: selections.value.shiftId
+    })
+
+    router.push('/schedule-view')
+  } catch (error) {
+    console.error('Ошибка при отправке формы:', error)
+  }
+}
 </script>
 
 <template>
@@ -198,6 +219,14 @@ watch(
           </option>
         </select>
       </div>
+
+      <button
+        @click="submitForm"
+        :disabled="isLoading"
+        class="submit-button"
+      >
+        Сохранить график
+      </button>
     </template>
   </div>
 </template>
@@ -265,5 +294,21 @@ watch(
   color: #666;
   font-size: 0.85rem;
   font-style: italic;
+}
+
+.submit-button {
+  background: #2196F3;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 2rem;
+}
+
+.submit-button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
 }
 </style>

@@ -31,3 +31,6 @@ export * from '@/entities/team'
 
 // Shifts
 export * from '@/entities/shift'
+
+// Schedule
+export * from '@/entities/work-schedule'
