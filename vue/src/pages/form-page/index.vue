@@ -10,6 +10,7 @@ import {
   useWorkScheduleStore
 } from '@stores'
 import { useRouter } from 'vue-router'
+import { UiSelect } from '@/shared/ui/Select'
 
 const router = useRouter()
 
@@ -116,109 +117,42 @@ const submitForm = async () => {
     <div v-else-if="error" class="error">{{ error }}</div>
 
     <template v-else>
-      <div class="form-group">
-        <label class="form-label">Город:</label>
-        <select 
-          v-model="selections.cityId" 
-          class="form-select"
-        >
-          <option
-            v-for="city in cities"
-            :key="city.id"
-            :value="city.id"
-          >
-            {{ city.name }}
-          </option>
-        </select>
-      </div>
+      <UiSelect
+        v-model="selections.cityId"
+        :options="cities.map(city => ({ value: city.id, label: city.name }))"
+        label="Город:"
+      />
 
-      <div class="form-group">
-        <label class="form-label">Цех:</label>
-        <select 
-          v-model="selections.departmentId"
-          class="form-select"
-          :disabled="!filteredDepartments.length"
-        >
-          <option
-            v-for="department in filteredDepartments"
-            :key="department.id"
-            :value="department.id"
-          >
-            {{ department.name }}
-          </option>
-        </select>
-        <div 
-          v-if="selections.cityId && !filteredDepartments.length" 
-          class="hint"
-        >
-          Нет доступных цехов для выбранного города
-        </div>
-      </div>
+      <UiSelect
+        v-model="selections.departmentId"
+        :options="filteredDepartments.map(department => ({ value: department.id, label: department.name }))"
+        label="Цех:"
+        :disabled="!filteredDepartments.length"
+        hint="Нет доступных цехов для выбранного города"
+      />
 
-      <div class="form-group">
-        <label class="form-label">Сотрудник:</label>
-        <select
-          v-model="selections.employeeId"
-          class="form-select with-placeholder"
-          :disabled="!selections.departmentId || !filteredEmployees.length"
-        >
-          <option value="" disabled hidden>
-            Выберите сотрудника
-          </option>
-          <option
-            v-for="employee in filteredEmployees"
-            :key="employee.id"
-            :value="employee.id"
-          >
-            {{ employee.name }} ({{ employee.position }})
-          </option>
-        </select>
-        <div 
-          v-if="selections.departmentId && !filteredEmployees.length" 
-          class="hint"
-        >
-          Нет доступных сотрудников в выбранном цехе
-        </div>
-      </div>
+      <UiSelect
+        v-model="selections.employeeId"
+        :options="filteredEmployees.map(employee => ({ value: employee.id, label: `${employee.name} (${employee.position})` }))"
+        label="Сотрудник:"
+        placeholder="Выберите сотрудника"
+        :disabled="!selections.departmentId || !filteredEmployees.length"
+        hint="Нет доступных сотрудников в выбранном цехе"
+      />
 
-      <div class="form-group">
-        <label class="form-label">Бригада:</label>
-        <select 
-          v-model="selections.teamId" 
-          class="form-select with-placeholder"
-        >
-          <option value="" disabled hidden>
-            Выберите бригаду
-          </option>
-          <option
-            v-for="team in teams"
-            :key="team.id"
-            :value="team.id"
-          >
-            {{ team.name }}
-            <span v-if="team.description">({{ team.description }})</span>
-          </option>
-        </select>
-      </div>
+      <UiSelect
+        v-model="selections.teamId"
+        :options="teams.map(team => ({ value: team.id, label: team.name }))"
+        label="Бригада:"
+        placeholder="Выберите бригаду"
+      />
 
-      <div class="form-group">
-        <label class="form-label">Смена:</label>
-        <select 
-          v-model="selections.shiftId" 
-          class="form-select with-placeholder"
-        >
-          <option value="" disabled hidden>
-            Выберите смену
-          </option>
-          <option
-            v-for="shift in shifts"
-            :key="shift.id"
-            :value="shift.id"
-          >
-            {{ shift.name }} ({{ shift.startTime }} - {{ shift.endTime }})
-          </option>
-        </select>
-      </div>
+      <UiSelect
+        v-model="selections.shiftId"
+        :options="shifts.map(shift => ({ value: shift.id, label: `${shift.name} (${shift.startTime} - ${shift.endTime})` }))"
+        label="Смена:"
+        placeholder="Выберите смену"
+      />
 
       <button
         @click="submitForm"
@@ -230,85 +164,3 @@ const submitForm = async () => {
     </template>
   </div>
 </template>
-
-<style scoped>
-.form-container {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.loading {
-  padding: 1rem;
-  text-align: center;
-  color: #666;
-}
-
-.error {
-  padding: 1rem;
-  color: #d32f2f;
-  background-color: #fde8e8;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #333;
-}
-
-.form-select {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: white;
-  font-size: 1rem;
-  transition: border-color 0.3s;
-}
-
-.form-select:focus {
-  outline: none;
-  border-color: #4285f4;
-  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
-}
-
-.form-select:disabled {
-  background-color: #f9f9f9;
-  color: #999;
-  cursor: not-allowed;
-}
-
-.form-select.with-placeholder:invalid {
-  color: #999;
-}
-
-.hint {
-  margin-top: 0.5rem;
-  color: #666;
-  font-size: 0.85rem;
-  font-style: italic;
-}
-
-.submit-button {
-  background: #2196F3;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 2rem;
-}
-
-.submit-button:disabled {
-  background: #cccccc;
-  cursor: not-allowed;
-}
-</style>
