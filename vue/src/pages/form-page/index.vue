@@ -13,6 +13,7 @@ import { useRouter } from 'vue-router'
 import { UiSelect } from '@/shared/ui/Select'
 import { UiButton } from '@/shared/ui/Button'
 import { UiCard } from '@/shared/ui/Card'
+import styles from './styles.module.scss'
 
 const router = useRouter()
 
@@ -96,6 +97,16 @@ watch(
   { immediate: true }
 )
 
+const isFormValid = computed(() => {
+  return (
+    selections.value.cityId &&
+    selections.value.departmentId &&
+    selections.value.employeeId &&
+    selections.value.teamId &&
+    selections.value.shiftId
+  )
+})
+
 const submitForm = async () => {
   try {
     const newSchedule = await stores.schedule.createSchedule({
@@ -117,7 +128,7 @@ const submitForm = async () => {
 <template>
   <UiCard>
     <div v-if="isLoading">Загрузка городов</div>
-    <div v-else-if="error" class="error">{{ error }}</div>
+    <div v-else-if="error" :class="styles['error']">{{ error }}</div>
 
     <template v-else>
       <UiSelect
@@ -157,10 +168,10 @@ const submitForm = async () => {
         placeholder="Выберите смену"
       />
 
-      <div class="form-actions">
+      <div :class="styles['form-actions']">
         <UiButton
           @click="submitForm"
-          :disabled="isLoading"
+          :disabled="isLoading || !isFormValid"
         >
           Сохранить график
         </UiButton>
@@ -168,10 +179,3 @@ const submitForm = async () => {
     </template>
   </UiCard>
 </template>
-
-<style scoped>
-.form-actions {
-  display: flex;
-  justify-content: center;
-}
-</style>
