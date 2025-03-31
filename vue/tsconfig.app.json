@@ -6,7 +6,8 @@
     "moduleResolution": "node",
 
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@stores": ["./src/app/providers/store"]
     },
 
     /* Linting */

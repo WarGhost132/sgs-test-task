@@ -7,5 +7,7 @@
 }
 
 body {
-  background: $primary;
+  background: $background;
+  color: $text-color;
+  font-family: 'Roboto', sans-serif;
 }

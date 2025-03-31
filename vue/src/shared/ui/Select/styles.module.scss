@@ -1,0 +1,58 @@
+.select {
+  &-group {
+    margin-bottom: 1.5rem;
+
+    &--has-hint {
+      .select-label {
+        color: $form-hint-color;
+      }
+
+      .select-control:hover {
+        border-color: $form-border-color;
+      }
+    }
+  }
+
+  &-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $text-color;
+  }
+
+  &-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $form-border-color;
+    border-radius: $card-border-radius;
+    background-color: $form-bg;
+    color: $text-color;
+    font-size: 1rem;
+    transition:
+      border-color $form-transition,
+      box-shadow $form-transition;
+
+    &:hover {
+      border-color: $form-border-hover;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $form-border-focus;
+      box-shadow: 0 0 0 2px rgba($form-border-focus, 0.2);
+    }
+
+    &:disabled {
+      background-color: $form-bg-disabled;
+      color: $form-text-disabled;
+      cursor: not-allowed;
+    }
+  }
+
+  &-hint {
+    margin-top: 0.5rem;
+    color: $form-hint-color;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+}

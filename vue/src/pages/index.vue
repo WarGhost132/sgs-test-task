@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { UiPage } from '@/shared/ui/Page';
+
 </script>
 
 <template>
-  <RouterView />
+  <UiPage>
+    <RouterView />
+  </UiPage>
 </template>
