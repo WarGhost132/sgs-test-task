@@ -4,8 +4,10 @@ $background: #202020;
 $text-color: #f4f4f4;
 $text-disabled: #999;
 $text-error: #f44336;
+$text-secondary: #aaa;
 
 $primary-color: #4285f4;
+$primary-hover: color.adjust($primary-color, $lightness: -20%);
 
 $card-color: #444444;
 $card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -13,9 +15,20 @@ $card-padding: 1.5rem;
 $card-border-radius: 0.5rem;
 
 $button-color: $primary-color;
-$button-hover: color.adjust($primary-color, $lightness: -20%);
+$button-hover: $primary-hover;
 $button-text: $text-color;
 $button-disabled: #e0e0e0;
+
+$gap-small: 0.5rem;
+$gap-medium: 1rem;
+$gap-large: 1.5rem;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 600;
+
+$transition-fast: 0.2s ease;
+$transition-medium: 0.3s ease;
 
 $form-border-color: #555;
 $form-border-hover: $primary-color;
@@ -23,5 +36,7 @@ $form-border-focus: $primary-color;
 $form-bg: #333;
 $form-bg-disabled: #252525;
 $form-text-disabled: $text-disabled;
-$form-hint-color: #aaa;
-$form-transition: 0.3s ease;
+$form-hint-color: $text-secondary;
+$form-transition: $transition-medium;
+
+
