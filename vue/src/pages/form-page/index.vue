@@ -12,6 +12,7 @@ import {
 import { useRouter } from 'vue-router'
 import { UiSelect } from '@/shared/ui/Select'
 import { UiButton } from '@/shared/ui/Button'
+import { UiCard } from '@/shared/ui/Card'
 
 const router = useRouter()
 
@@ -106,6 +107,7 @@ const submitForm = async () => {
     })
 
     router.push('/schedule-view')
+    console.log(newSchedule)
   } catch (error) {
     console.error('Ошибка при отправке формы:', error)
   }
@@ -113,7 +115,7 @@ const submitForm = async () => {
 </script>
 
 <template>
-  <div>
+  <UiCard>
     <div v-if="isLoading">Загрузка городов</div>
     <div v-else-if="error" class="error">{{ error }}</div>
 
@@ -155,12 +157,21 @@ const submitForm = async () => {
         placeholder="Выберите смену"
       />
 
-      <UiButton
-        @click="submitForm"
-        :disabled="isLoading"
-      >
-        Сохранить график
-      </UiButton>
+      <div class="form-actions">
+        <UiButton
+          @click="submitForm"
+          :disabled="isLoading"
+        >
+          Сохранить график
+        </UiButton>
+      </div>
     </template>
-  </div>
+  </UiCard>
 </template>
+
+<style scoped>
+.form-actions {
+  display: flex;
+  justify-content: center;
+}
+</style>

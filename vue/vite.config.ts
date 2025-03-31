@@ -11,5 +11,12 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@stores': path.resolve(__dirname, './src/app/providers/store')
     }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "@/app/styles/vars.scss" as *;`
+      }
+    }
   }
 })

@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { computed } from 'vue'
+import styles from './styles.module.scss'
+
 const props = defineProps({
   modelValue: {
     type: [String, Number],
@@ -32,14 +35,19 @@ const handleChange = (event: Event) => {
   const target = event.target as HTMLSelectElement
   emit('update:modelValue', target.value)
 }
+
+const groupClasses = computed(() => [
+  styles['select-group'],
+  { [styles['select-group--has-hint']]: props.hint && props.disabled }
+])
 </script>
 
 <template>
-  <div class="form-group">
-    <label v-if="label" class="form-label">{{ label }}</label>
+  <div :class="groupClasses">
+    <label v-if="label" :class="styles['select-label']">{{ label }}</label>
     <select
       :value="modelValue"
-      class="form-select"
+      :class="styles['select-control']"
       :disabled="disabled"
       @change="handleChange"
     >
@@ -59,48 +67,6 @@ const handleChange = (event: Event) => {
         {{ option.label }}
       </option>
     </select>
-    <div v-if="hint && disabled" class="hint">{{ hint }}</div>
+    <div v-if="hint && disabled" :class="styles['select-hint']">{{ hint }}</div>
   </div>
 </template>
-
-<style scoped>
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #333;
-}
-
-.form-select {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: white;
-  font-size: 1rem;
-  transition: border-color 0.3s;
-}
-
-.form-select:focus {
-  outline: none;
-  border-color: #4285f4;
-  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
-}
-
-.form-select:disabled {
-  background-color: #f9f9f9;
-  color: #999;
-  cursor: not-allowed;
-}
-
-.hint {
-  margin-top: 0.5rem;
-  color: #666;
-  font-size: 0.85rem;
-  font-style: italic;
-}
-</style>

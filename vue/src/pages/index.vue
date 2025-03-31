@@ -1,5 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { UiPage } from '@/shared/ui/Page';
+
+</script>
 
 <template>
-  <RouterView />
+  <UiPage>
+    <RouterView />
+  </UiPage>
 </template>
